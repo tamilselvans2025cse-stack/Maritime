@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Chart of Accounts')}"></head>
+<body>
+<div th:replace="~{fragments :: sidebar}"></div>
+<main>
+    <h1>Chart of Accounts</h1>
+    <table>
+        <thead><tr><th>Code</th><th>Name</th><th>Type</th><th>Balance</th></tr></thead>
+        <tbody>
+        <tr th:each="a : ${accounts}">
+            <td th:text="${a.accountCode}">-</td>
+            <td th:text="${a.accountName}">-</td>
+            <td><span class="badge" th:text="${a.accountType}">-</span></td>
+            <td th:text="'₹' + ${a.balance}">-</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2>Add Account</h2>
+    <form th:action="@{/accounts}" method="post" class="form-grid">
+        <input type="text" name="accountCode" placeholder="Account Code" required/>
+        <input type="text" name="accountName" placeholder="Account Name" required/>
+        <select name="accountType" required>
+            <option value="ASSET">Asset</option>
+            <option value="LIABILITY">Liability</option>
+            <option value="INCOME">Income</option>
+            <option value="EXPENSE">Expense</option>
+        </select>
+        <button type="submit" class="btn">Add Account</button>
+    </form>
+</main>
+</body>
+</html>

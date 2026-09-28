@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Vendor Bills')}"></head>
+<body>
+<div th:replace="~{fragments :: sidebar}"></div>
+<main>
+    <h1>Vendor Bills</h1>
+    <table>
+        <thead><tr><th>Bill Number</th><th>Vendor</th><th>Bill Date</th><th>Due Date</th><th>Amount</th><th>Status</th></tr></thead>
+        <tbody>
+        <tr th:each="b : ${bills}">
+            <td th:text="${b.billNumber}">-</td>
+            <td th:text="${b.vendor != null ? b.vendor.name : '-'}">-</td>
+            <td th:text="${b.billDate}">-</td>
+            <td th:text="${b.dueDate}">-</td>
+            <td th:text="'₹' + ${b.amount}">-</td>
+            <td><span class="badge" th:text="${b.status}">-</span></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2>Convert Purchase Order to Vendor Bill</h2>
+    <form th:action="@{/vendor-bills}" method="post" class="form-grid">
+        <select name="purchaseOrderId" required>
+            <option value="">Select Approved PO</option>
+            <option th:each="o : ${orders}" th:if="${o.status.name() == 'APPROVED'}" th:value="${o.id}" th:text="${o.poNumber}"></option>
+        </select>
+        <button type="submit" class="btn">Create Vendor Bill</button>
+    </form>
+</main>
+</body>
+</html>

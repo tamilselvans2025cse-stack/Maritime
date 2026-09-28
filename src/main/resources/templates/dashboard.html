@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Dashboard')}"></head>
+<body>
+<div th:replace="~{fragments :: sidebar}"></div>
+<main>
+    <div class="page-header">
+        <div>
+            <p class="eyebrow">Operations overview</p>
+            <h1>Terminal Dashboard</h1>
+        </div>
+        <div class="status-chip status-chip-live">Live • 24/7 Port Ops</div>
+    </div>
+
+    <div class="summary-strip">
+        <div class="summary-item">
+            <span class="summary-label">Fleet</span>
+            <strong class="summary-number" th:text="${totalVessels}">0</strong>
+        </div>
+        <div class="summary-item">
+            <span class="summary-label">Active</span>
+            <strong class="summary-number" th:text="${activeVessels}">0</strong>
+        </div>
+        <div class="summary-item">
+            <span class="summary-label">Revenue</span>
+            <strong class="summary-number" th:text="'₹' + ${todaysRevenue}">₹0</strong>
+        </div>
+        <div class="summary-item">
+            <span class="summary-label">Open Bills</span>
+            <strong class="summary-number" th:text="${openVendorBills}">0</strong>
+        </div>
+    </div>
+
+    <div class="cards">
+        <div class="card accent-blue"><div class="card-label">Total Vessels</div><div class="card-value" data-value="${totalVessels}" th:text="${totalVessels}">0</div></div>
+        <div class="card accent-green"><div class="card-label">Active Vessels</div><div class="card-value" data-value="${activeVessels}" th:text="${activeVessels}">0</div></div>
+        <div class="card accent-teal"><div class="card-label">Available Berths</div><div class="card-value" data-value="${availableBerths}" th:text="${availableBerths}">0</div></div>
+        <div class="card accent-gold"><div class="card-label">Occupied Berths</div><div class="card-value" data-value="${occupiedBerths}" th:text="${occupiedBerths}">0</div></div>
+        <div class="card accent-purple"><div class="card-label">Today’s Docking Revenue</div><div class="card-value" data-value="${todaysRevenue}" th:text="'₹' + ${todaysRevenue}">₹0</div></div>
+        <div class="card accent-coral"><div class="card-label">Open Vendor Bills</div><div class="card-value" data-value="${openVendorBills}" th:text="${openVendorBills}">0</div></div>
+    </div>
+
+    <div class="chart-grid">
+        <div class="panel chart-card">
+            <div class="panel-header"><h3>Fleet Status</h3></div>
+            <canvas id="vesselStatusChart"></canvas>
+        </div>
+        <div class="panel chart-card">
+            <div class="panel-header"><h3>Berth Utilization</h3></div>
+            <canvas id="berthStatusChart"></canvas>
+        </div>
+        <div class="panel chart-card chart-wide">
+            <div class="panel-header"><h3>Monthly Revenue Trend</h3></div>
+            <canvas id="revenueChart"></canvas>
+        </div>
+    </div>
+
+    <h2>Vessel Status</h2>
+    <table>
+        <thead><tr><th>Vessel</th><th>Cargo</th><th>Speed</th><th>Status</th></tr></thead>
+        <tbody>
+        <tr th:each="v : ${vessels}">
+            <td th:text="${v.vesselName}">-</td>
+            <td th:text="${v.cargoType}">-</td>
+            <td th:text="${v.speed}">-</td>
+            <td><span class="badge" th:text="${v.status}">-</span></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2>Berth Status</h2>
+    <table>
+        <thead><tr><th>Berth</th><th>Sector</th><th>Status</th></tr></thead>
+        <tbody>
+        <tr th:each="b : ${berths}">
+            <td th:text="${b.berthNumber}">-</td>
+            <td th:text="${b.sector}">-</td>
+            <td><span class="badge" th:text="${b.status}">-</span></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2>Recent Docking Events</h2>
+    <table>
+        <thead><tr><th>Vessel</th><th>Berth</th><th>Duration (h)</th><th>Docking Fee</th><th>Status</th></tr></thead>
+        <tbody>
+        <tr th:each="d : ${dockings}">
+            <td th:text="${d.vessel != null ? d.vessel.vesselName : '-'}">-</td>
+            <td th:text="${d.berth != null ? d.berth.berthNumber : '-'}">-</td>
+            <td th:text="${d.occupancyDurationHours}">-</td>
+            <td th:text="${d.dockingFee}">-</td>
+            <td><span class="badge" th:text="${d.status}">-</span></td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script th:inline="javascript">
+    const vesselStatusLabels = /*[[${vesselStatusLabels}]]*/ ['Waiting'];
+    const vesselStatusData = /*[[${vesselStatusData}]]*/ [0];
+    const berthStatusLabels = /*[[${berthStatusLabels}]]*/ ['Available'];
+    const berthStatusData = /*[[${berthStatusData}]]*/ [0];
+    const monthlyRevenueLabels = /*[[${monthlyRevenueLabels}]]*/ ['Jan'];
+    const monthlyRevenueSeries = /*[[${monthlyRevenueSeries}]]*/ [0];
+
+    new Chart(document.getElementById('vesselStatusChart'), {
+        type: 'doughnut',
+        data: {
+            labels: vesselStatusLabels,
+            datasets: [{ data: vesselStatusData, backgroundColor: ['#5b8def', '#47c9af', '#f6b93b', '#ff7f50'] }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom' } }
+        }
+    });
+
+    new Chart(document.getElementById('berthStatusChart'), {
+        type: 'bar',
+        data: {
+            labels: berthStatusLabels,
+            datasets: [{ label: 'Berths', data: berthStatusData, backgroundColor: ['#2a9d8f', '#ffb703', '#1d4e89', '#9b59b6'] }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true, precision: 0 } }
+        }
+    });
+
+    new Chart(document.getElementById('revenueChart'), {
+        type: 'line',
+        data: {
+            labels: monthlyRevenueLabels,
+            datasets: [{
+                label: 'Revenue (₹)',
+                data: monthlyRevenueSeries,
+                borderColor: '#1d4e89',
+                backgroundColor: 'rgba(29,78,137,0.15)',
+                fill: true,
+                tension: 0.35
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+</script>
+</body>
+</html>

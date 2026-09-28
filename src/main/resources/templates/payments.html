@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Payments')}"></head>
+<body>
+<div th:replace="~{fragments :: sidebar}"></div>
+<main>
+    <h1>Payments</h1>
+    <table>
+        <thead><tr><th>Reference</th><th>Type</th><th>Amount</th><th>Date</th><th>Customer</th><th>Vendor</th><th>Status</th></tr></thead>
+        <tbody>
+        <tr th:each="p : ${payments}">
+            <td th:text="${p.paymentReference}">-</td>
+            <td><span class="badge" th:text="${p.paymentType}">-</span></td>
+            <td th:text="'₹' + ${p.amount}">-</td>
+            <td th:text="${p.paymentDate}">-</td>
+            <td th:text="${p.customer != null ? p.customer.name : '-'}">-</td>
+            <td th:text="${p.vendor != null ? p.vendor.name : '-'}">-</td>
+            <td th:text="${p.status}">-</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="two-col">
+        <div>
+            <h2>Record Customer Payment</h2>
+            <form th:action="@{/payments/customer}" method="post" class="form-grid">
+                <select name="invoiceId" required>
+                    <option value="">Select Invoice</option>
+                    <option th:each="i : ${invoices}" th:if="${i.status.name() != 'PAID'}" th:value="${i.id}" th:text="${i.invoiceNumber} + ' - ₹' + ${i.totalAmount}"></option>
+                </select>
+                <input type="number" step="0.01" name="amount" placeholder="Amount" required/>
+                <select name="paymentType">
+                    <option value="BANK">Bank</option>
+                    <option value="CASH">Cash</option>
+                </select>
+                <button type="submit" class="btn">Record Payment</button>
+            </form>
+        </div>
+        <div>
+            <h2>Record Vendor Payment</h2>
+            <form th:action="@{/payments/vendor}" method="post" class="form-grid">
+                <select name="vendorBillId" required>
+                    <option value="">Select Vendor Bill</option>
+                    <option th:each="b : ${bills}" th:if="${b.status.name() != 'PAID'}" th:value="${b.id}" th:text="${b.billNumber} + ' - ₹' + ${b.amount}"></option>
+                </select>
+                <input type="number" step="0.01" name="amount" placeholder="Amount" required/>
+                <select name="paymentType">
+                    <option value="BANK">Bank</option>
+                    <option value="CASH">Cash</option>
+                </select>
+                <button type="submit" class="btn">Record Payment</button>
+            </form>
+        </div>
+    </div>
+</main>
+</body>
+</html>

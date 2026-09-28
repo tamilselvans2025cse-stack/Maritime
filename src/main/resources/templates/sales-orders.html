@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Sales Orders')}"></head>
+<body>
+<div th:replace="~{fragments :: sidebar}"></div>
+<main>
+    <h1>Sales Orders</h1>
+    <table>
+        <thead><tr><th>Order #</th><th>Customer</th><th>Vessel</th><th>Berth</th><th>Total</th><th>Status</th></tr></thead>
+        <tbody>
+        <tr th:each="o : ${orders}">
+            <td th:text="${o.orderNumber}">-</td>
+            <td th:text="${o.customer != null ? o.customer.name : '-'}">-</td>
+            <td th:text="${o.vessel != null ? o.vessel.vesselName : '-'}">-</td>
+            <td th:text="${o.berth != null ? o.berth.berthNumber : '-'}">-</td>
+            <td th:text="'₹' + ${o.totalAmount}">-</td>
+            <td><span class="badge" th:text="${o.status}">-</span></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2>Create Sales Order (Berth Booking)</h2>
+    <form th:action="@{/sales-orders}" method="post" class="form-grid">
+        <select name="customerId" required>
+            <option value="">Select Customer</option>
+            <option th:each="c : ${customers}" th:value="${c.id}" th:text="${c.name}"></option>
+        </select>
+        <select name="vesselId" required>
+            <option value="">Select Vessel</option>
+            <option th:each="v : ${vessels}" th:value="${v.id}" th:text="${v.vesselName}"></option>
+        </select>
+        <select name="berthId" required>
+            <option value="">Select Berth</option>
+            <option th:each="b : ${berths}" th:value="${b.id}" th:text="${b.berthNumber}"></option>
+        </select>
+        <input type="number" step="0.01" name="totalAmount" placeholder="Total Amount (₹)"/>
+        <button type="submit" class="btn">Create Sales Order</button>
+    </form>
+</main>
+</body>
+</html>

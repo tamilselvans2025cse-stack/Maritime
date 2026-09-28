@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Budget Report')}"></head>
+<body>
+<div th:replace="~{fragments :: sidebar}"></div>
+<main>
+    <h1>Budget Variance Report</h1>
+    <table>
+        <thead><tr><th>Analytic Account</th><th>Account</th><th>Planned</th><th>Actual</th><th>Variance</th><th>Utilization %</th></tr></thead>
+        <tbody>
+        <tr th:each="r : ${rows}">
+            <td th:text="${r.analyticAccount}">-</td>
+            <td th:text="${r.account}">-</td>
+            <td th:text="'₹' + ${r.planned}">-</td>
+            <td th:text="'₹' + ${r.actual}">-</td>
+            <td th:text="'₹' + ${r.variance}">-</td>
+            <td th:text="${r.utilizationPercent} + '%'">-</td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

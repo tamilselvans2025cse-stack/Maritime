@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="head(title)">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="${title} + ' | Maritime Terminal ERP'">Maritime Terminal ERP</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <script th:src="@{/js/script.js}" defer></script>
+</div>
+
+<div th:fragment="sidebar">
+    <div class="sidebar">
+        <div class="brand">Maritime ERP</div>
+        <nav>
+            <a th:href="@{/dashboard}">Dashboard</a>
+            <a th:href="@{/berths}">Berths</a>
+            <a th:href="@{/dockings}">Docking</a>
+            <a th:href="@{/logout}">Logout</a>
+        </nav>
+    </div>
+</div>
+
+</body>
+</html>

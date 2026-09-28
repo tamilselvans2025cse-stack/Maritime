@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Purchase Orders')}"></head>
+<body>
+<div th:replace="~{fragments :: sidebar}"></div>
+<main>
+    <h1>Purchase Orders</h1>
+    <table>
+        <thead><tr><th>PO Number</th><th>Vendor</th><th>Order Date</th><th>Total</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+        <tr th:each="o : ${orders}">
+            <td th:text="${o.poNumber}">-</td>
+            <td th:text="${o.vendor != null ? o.vendor.name : '-'}">-</td>
+            <td th:text="${o.orderDate}">-</td>
+            <td th:text="'₹' + ${o.totalAmount}">-</td>
+            <td><span class="badge" th:text="${o.status}">-</span></td>
+            <td>
+                <form th:if="${o.status.name() == 'DRAFT'}" th:action="@{/purchase-orders/{id}/approve(id=${o.id})}" method="post">
+                    <button type="submit" class="btn-sm">Approve</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2>Create Purchase Order</h2>
+    <form th:action="@{/purchase-orders}" method="post" class="form-grid purchase-order-form">
+        <select name="vendorId" required>
+            <option value="">Select Vendor</option>
+            <option th:each="v : ${vendors}" th:value="${v.id}" th:text="${v.name}"></option>
+        </select>
+        <select name="productId" required>
+            <option value="">Select Product</option>
+            <option th:each="p : ${products}" th:value="${p.id}" th:text="${p.productName}" th:attr="data-price=${p.unitPrice}"></option>
+        </select>
+        <input type="number" step="0.01" name="quantity" placeholder="Quantity" value="1" min="1" required/>
+        <input type="number" step="0.01" name="unitPrice" placeholder="Unit Price" required/>
+        <button type="submit" class="btn">Create PO</button>
+    </form>
+    <div class="live-preview">
+        <div class="live-preview-label">Live PO total</div>
+        <div id="po-total-preview" class="live-preview-value">₹0.00</div>
+    </div>
+</main>
+</body>
+</html>

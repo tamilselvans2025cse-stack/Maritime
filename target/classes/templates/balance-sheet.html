@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Balance Sheet')}"></head>
+<body>
+<div th:replace="~{fragments :: sidebar}"></div>
+<main>
+    <h1>Balance Sheet</h1>
+
+    <div class="two-col">
+        <div>
+            <h2>Assets</h2>
+            <table>
+                <thead><tr><th>Account</th><th>Balance</th></tr></thead>
+                <tbody>
+                <tr th:each="a : ${assets}">
+                    <td th:text="${a.accountName}">-</td>
+                    <td th:text="'₹' + ${a.balance}">-</td>
+                </tr>
+                </tbody>
+                <tfoot><tr><td><strong>Total Assets</strong></td><td><strong th:text="'₹' + ${totalAssets}">-</strong></td></tr></tfoot>
+            </table>
+        </div>
+        <div>
+            <h2>Liabilities</h2>
+            <table>
+                <thead><tr><th>Account</th><th>Balance</th></tr></thead>
+                <tbody>
+                <tr th:each="l : ${liabilities}">
+                    <td th:text="${l.accountName}">-</td>
+                    <td th:text="'₹' + ${l.balance}">-</td>
+                </tr>
+                </tbody>
+                <tfoot><tr><td><strong>Total Liabilities</strong></td><td><strong th:text="'₹' + ${totalLiabilities}">-</strong></td></tr></tfoot>
+            </table>
+        </div>
+    </div>
+</main>
+</body>
+</html>

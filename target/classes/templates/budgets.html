@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Budgets')}"></head>
+<body>
+<div th:replace="~{fragments :: sidebar}"></div>
+<main>
+    <h1>Budgets</h1>
+    <table>
+        <thead><tr><th>Budget Name</th><th>Analytic Account</th><th>Fiscal Year</th><th>Total Budget</th></tr></thead>
+        <tbody>
+        <tr th:each="b : ${budgets}">
+            <td th:text="${b.budgetName}">-</td>
+            <td th:text="${b.analyticAccount != null ? b.analyticAccount.name : '-'}">-</td>
+            <td th:text="${b.fiscalYear}">-</td>
+            <td th:text="'₹' + ${b.totalBudget}">-</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2>Create Budget</h2>
+    <form th:action="@{/budgets}" method="post" class="form-grid">
+        <input type="text" name="budgetName" placeholder="Budget Name" required/>
+        <select name="analyticAccountId" required>
+            <option value="">Select Analytic Account</option>
+            <option th:each="a : ${analyticAccounts}" th:value="${a.id}" th:text="${a.name}"></option>
+        </select>
+        <input type="text" name="fiscalYear" placeholder="Fiscal Year (e.g. 2026)" required/>
+        <input type="number" step="0.01" name="totalBudget" placeholder="Total Budget (₹)" required/>
+        <button type="submit" class="btn">Create Budget</button>
+    </form>
+    <p class="hint">See the <a th:href="@{/budget-report}">Budget Report</a> for planned vs. actual variance per line.</p>
+</main>
+</body>
+</html>

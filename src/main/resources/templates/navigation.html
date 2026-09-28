@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Navigation')}"></head>
+<body>
+<div th:replace="~{fragments :: sidebar}"></div>
+<main>
+    <div class="page-header">
+        <div>
+            <p class="eyebrow">Fleet tracking</p>
+            <h1>Vessel Navigation (Simulated)</h1>
+        </div>
+        <div class="status-chip">AIS / LiDAR Live Feed</div>
+    </div>
+    <p class="hint">SimulatedAIS/LiDAR telemetry only. This does NOT control real vessels or provide real collision avoidance.</p>
+
+    <div th:each="v : ${vessels}" class="nav-card">
+        <h3 th:text="${v.vesselName}">Vessel</h3>
+        <div class="route">
+            <span class="route-node">START</span>
+            <span class="route-line">— — —</span>
+            <span class="route-node vessel">🚢 <span th:text="${v.speed} + ' kn'">-</span></span>
+            <span class="route-line">— — —</span>
+            <span class="route-node">PORT</span>
+        </div>
+        <table class="mini-table">
+            <tr><td>Latitude</td><td th:text="${v.latitude}">-</td></tr>
+            <tr><td>Longitude</td><td th:text="${v.longitude}">-</td></tr>
+            <tr><td>Heading</td><td th:text="${v.heading}">-</td></tr>
+            <tr><td>AIS Signal</td><td th:text="${v.aisSignalStrength}">-</td></tr>
+            <tr><td>LiDAR Obstacle Distance (m)</td><td th:text="${v.lidarObstacleDistance}">-</td></tr>
+            <tr><td>Status</td><td><span class="badge" th:text="${v.status}">-</span></td></tr>
+        </table>
+    </div>
+</main>
+</body>
+</html>

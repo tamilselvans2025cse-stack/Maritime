@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Berths')}"></head>
+<body>
+<div th:replace="~{fragments :: sidebar}"></div>
+<main>
+    <h1>Berths</h1>
+
+    <table>
+        <thead><tr><th>Number</th><th>Name</th><th>Sector</th><th>Max Length</th><th>Max Draft</th><th>Base Rate/hr</th><th>Status</th></tr></thead>
+        <tbody>
+        <tr th:each="b : ${berths}">
+            <td th:text="${b.berthNumber}">-</td>
+            <td th:text="${b.berthName}">-</td>
+            <td th:text="${b.sector}">-</td>
+            <td th:text="${b.maxVesselLength}">-</td>
+            <td th:text="${b.maxDraft}">-</td>
+            <td th:text="'₹' + ${b.baseDockingRatePerHour}">-</td>
+            <td><span class="badge" th:text="${b.status}">-</span></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2>Add Berth</h2>
+    <form th:action="@{/berths}" method="post" class="form-grid">
+        <input type="text" name="berthNumber" placeholder="Berth Number" required/>
+        <input type="text" name="berthName" placeholder="Berth Name"/>
+        <input type="text" name="sector" placeholder="Sector"/>
+        <input type="number" step="0.01" name="maxVesselLength" placeholder="Max Vessel Length (m)"/>
+        <input type="number" step="0.01" name="maxDraft" placeholder="Max Draft (m)"/>
+        <input type="number" step="0.01" name="baseDockingRatePerHour" placeholder="Base Rate / hr (₹)"/>
+        <button type="submit" class="btn">Add Berth</button>
+    </form>
+</main>
+</body>
+</html>

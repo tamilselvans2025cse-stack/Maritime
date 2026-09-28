@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Vessels')}"></head>
+<body>
+<div th:replace="~{fragments :: sidebar}"></div>
+<main>
+    <h1>Vessels</h1>
+
+    <table>
+        <thead><tr><th>Name</th><th>IMO</th><th>Type</th><th>Cargo</th><th>Length</th><th>Draft</th><th>Status</th></tr></thead>
+        <tbody>
+        <tr th:each="v : ${vessels}">
+            <td th:text="${v.vesselName}">-</td>
+            <td th:text="${v.imoNumber}">-</td>
+            <td th:text="${v.vesselType}">-</td>
+            <td th:text="${v.cargoType}">-</td>
+            <td th:text="${v.length}">-</td>
+            <td th:text="${v.draft}">-</td>
+            <td><span class="badge" th:text="${v.status}">-</span></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2>Add Vessel</h2>
+    <form th:action="@{/vessels}" method="post" class="form-grid">
+        <input type="text" name="vesselName" placeholder="Vessel Name" required/>
+        <input type="text" name="imoNumber" placeholder="IMO Number" required/>
+        <input type="text" name="shippingLine" placeholder="Shipping Line"/>
+        <input type="text" name="vesselType" placeholder="Vessel Type"/>
+        <input type="text" name="cargoType" placeholder="Cargo Type"/>
+        <input type="number" step="0.01" name="cargoWeight" placeholder="Cargo Weight (t)"/>
+        <input type="number" step="0.01" name="length" placeholder="Length (m)"/>
+        <input type="number" step="0.01" name="width" placeholder="Width (m)"/>
+        <input type="number" step="0.01" name="draft" placeholder="Draft (m)"/>
+        <button type="submit" class="btn">Add Vessel</button>
+    </form>
+</main>
+</body>
+</html>

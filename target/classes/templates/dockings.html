@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Docking Events')}"></head>
+<body>
+<div th:replace="~{fragments :: sidebar}"></div>
+<main>
+    <h1>Docking Events</h1>
+
+    <table>
+        <thead><tr><th>Vessel</th><th>Berth</th><th>Arrival</th><th>Departure</th><th>Hours</th><th>Docking Fee</th><th>Shore Power Fee</th><th>Total</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+        <tr th:each="d : ${dockings}">
+            <td th:text="${d.vessel != null ? d.vessel.vesselName : '-'}">-</td>
+            <td th:text="${d.berth != null ? d.berth.berthNumber : '-'}">-</td>
+            <td th:text="${d.arrivalTime}">-</td>
+            <td th:text="${d.departureTime}">-</td>
+            <td th:text="${d.occupancyDurationHours}">-</td>
+            <td th:text="${d.dockingFee}">-</td>
+            <td th:text="${d.shorePowerFee}">-</td>
+            <td th:text="${d.totalFee}">-</td>
+            <td><span class="badge" th:text="${d.status}">-</span></td>
+            <td>
+                <form th:if="${d.status.name() != 'COMPLETED'}" th:action="@{/dockings/{id}/departure(id=${d.id})}" method="post">
+                    <input type="number" step="0.01" name="shorePowerKwh" placeholder="Shore power kWh" style="width:120px"/>
+                    <button type="submit" class="btn-sm">Process Departure</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2>Start a Docking (Berth Reservation)</h2>
+    <p class="hint">Docking fee = occupancy hours × base rate × multiplier (1.00 up to 4h, 1.25 up to 8h, 1.50 beyond 8h).</p>
+    <form th:action="@{/dockings}" method="post" class="form-grid docking-form">
+        <select name="vesselId" required>
+            <option value="">Select Vessel</option>
+            <option th:each="v : ${vessels}" th:value="${v.id}" th:text="${v.vesselName}"></option>
+        </select>
+        <select name="berthId" required>
+            <option value="">Select Berth</option>
+            <option th:each="b : ${berths}" th:value="${b.id}" th:text="${b.berthNumber} + ' - ' + ${b.status}" th:attr="data-rate=${b.baseDockingRatePerHour}"></option>
+        </select>
+        <button type="submit" class="btn">Start Docking</button>
+    </form>
+    <div id="docking-preview" class="live-preview docking-preview">
+        <div class="live-preview-label">Docking summary</div>
+        <div class="live-preview-value">Choose a vessel and berth</div>
+    </div>
+</main>
+</body>
+</html>

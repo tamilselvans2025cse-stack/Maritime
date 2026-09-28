@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Profit & Loss')}"></head>
+<body>
+<div th:replace="~{fragments :: sidebar}"></div>
+<main>
+    <h1>Profit &amp; Loss</h1>
+
+    <div class="two-col">
+        <div>
+            <h2>Income</h2>
+            <table>
+                <thead><tr><th>Account</th><th>Amount</th></tr></thead>
+                <tbody>
+                <tr th:each="i : ${income}">
+                    <td th:text="${i.accountName}">-</td>
+                    <td th:text="'₹' + ${i.balance.abs()}">-</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <h2>Expenses</h2>
+            <table>
+                <thead><tr><th>Account</th><th>Amount</th></tr></thead>
+                <tbody>
+                <tr th:each="e : ${expenses}">
+                    <td th:text="${e.accountName}">-</td>
+                    <td th:text="'₹' + ${e.balance}">-</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <table class="summary-table">
+        <tr><td>Total Revenue</td><td th:text="'₹' + ${totalRevenue}">-</td></tr>
+        <tr><td>Total Expenses</td><td th:text="'₹' + ${totalExpenses}">-</td></tr>
+        <tr class="highlight"><td>Net Profit / Loss</td><td th:text="'₹' + ${netProfit}">-</td></tr>
+    </table>
+</main>
+</body>
+</html>

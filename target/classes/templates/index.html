@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Login')}"></head>
+<body class="landing login-body">
+    <div class="login-card">
+        <div class="login-brand">
+            <span class="brand-mark">M</span>
+            <div>
+                <div class="brand-name">Maritime ERP</div>
+                <div class="brand-subtitle">Port operations login</div>
+            </div>
+        </div>
+
+        <h1>Welcome back</h1>
+        <p class="login-copy">Sign in to access berth and docking operations.</p>
+
+        <div th:if="${error}" class="login-error" th:text="${error}">Invalid username or password</div>
+
+        <form th:action="@{/login}" method="post" class="login-form">
+            <label>
+                Username
+                <input type="text" name="username" value="admin" required />
+            </label>
+            <label>
+                Password
+                <input type="password" name="password" value="admin123" required />
+            </label>
+            <button type="submit" class="btn login-btn">Login</button>
+        </form>
+
+        <div class="demo-credentials">Demo login: admin / admin123</div>
+    </div>
+</body>
+</html>

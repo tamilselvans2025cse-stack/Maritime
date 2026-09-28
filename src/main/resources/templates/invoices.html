@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Customer Invoices')}"></head>
+<body>
+<div th:replace="~{fragments :: sidebar}"></div>
+<main>
+    <h1>Customer Invoices</h1>
+    <table>
+        <thead><tr><th>Invoice #</th><th>Customer</th><th>Vessel</th><th>Invoice Date</th><th>Due Date</th><th>Total</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+        <tr th:each="i : ${invoices}">
+            <td th:text="${i.invoiceNumber}">-</td>
+            <td th:text="${i.customer != null ? i.customer.name : '-'}">-</td>
+            <td th:text="${i.vessel != null ? i.vessel.vesselName : '-'}">-</td>
+            <td th:text="${i.invoiceDate}">-</td>
+            <td th:text="${i.dueDate}">-</td>
+            <td th:text="'₹' + ${i.totalAmount}">-</td>
+            <td><span class="badge" th:text="${i.status}">-</span></td>
+            <td>
+                <form th:if="${i.status.name() != 'PAID'}" th:action="@{/invoices/{id}/pay(id=${i.id})}" method="post">
+                    <button type="submit" class="btn-sm">Mark Paid</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <p class="hint">Invoices are generated automatically when a docking event's departure is processed.</p>
+</main>
+</body>
+</html>
